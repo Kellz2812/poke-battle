@@ -1,147 +1,151 @@
-import React, { Component } from 'react';
+import React from 'react';
 import pokemonList from './seedPokemon.js';
-import {Pokemon} from "./Pokemon";
+import { Pokemon } from "./Pokemon";
 import "../src/styles/pokegame.css";
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
+// import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 
-export class Pokegame extends Component {
-    
-    constructor(props) {
-        super(props);
-        this.state = { player1: pokemonList[0], player2: pokemonList[1], winner: 0, index: 0, openDialog: false};
-        this.generatePlayer1=this.generatePlayer1.bind(this);
-        this.generatePlayer2=this.generatePlayer2.bind(this);
-        this.generateWinner=this.generateWinner.bind(this);
-        this.previousPokemonPlayer1=this.previousPokemonPlayer1.bind(this);
-        this.previousPokemonPlayer2=this.previousPokemonPlayer2.bind(this);
-      };
+export default function Pokegame() {
 
-      generatePlayer1 = () => {
-         let i = this.state.index < pokemonList.length ? this.state.index += 1 : 0;
-        this.setState({index: i});
-        pokemonList.slice(0, this.state.index).map(v => {
-            this.setState({player1: v});
-        });
-      };
+    const [player1, setPlayer1] = React.useState(pokemonList[0]);
+    const [player2, setPlayer2] = React.useState(pokemonList[1]);
+    const [winner, setWinner] = React.useState(0);
+    const [index, setIndex] = React.useState(0);
+    const [openDialog, setOpenDialog] = React.useState(false);
 
-      generatePlayer2 = () => {
-         let i = this.state.index < pokemonList.length ? this.state.index += 1 : 0;
-        this.setState({index: i});
-        pokemonList.slice(0, this.state.index).map(v => {
-            this.setState({player2: v});
-        });
-      }
-      previousPokemonPlayer1 = () =>{
-        let i = this.state.index < pokemonList.length ? this.state.index -=1 : 0;
-        this.setState({index: i});
-        pokemonList.slice(0, this.state.index).map(v => {
-            this.setState({player1: v});
-        });
-      }
+    const generatePlayer1 = () => {
+        if (index >= 0) {
+            setIndex(index + 1);
+            setPlayer1(pokemonList[index])
+        }
+        else {
+            setIndex(0)
+        }
+    };
 
-      previousPokemonPlayer2 = () =>{
-        let i = this.state.index < pokemonList.length ? this.state.index -=1 :  0;
-        this.setState({index: i});
-        pokemonList.slice(0, this.state.index).map(v => {
-            this.setState({player2: v});
-        });
-      }
-    
-    
-      generateWinner = () => {
-        let fighters = [this.state.player1, this.state.player2];
+    const generatePlayer2 = () => {
+        if (index >= 0) {
+            setIndex(index + 1);
+            setPlayer2(pokemonList[index])
+        }
+        else {
+            setIndex(0)
+        }
+    };
+
+    const previousPokemonPlayer1 = () => {
+        if (index >= 0) {
+            setIndex(index - 1);
+            setPlayer1(pokemonList[index])
+        }
+        else {
+            setIndex(0)
+        }
+    }
+
+    const previousPokemonPlayer2 = () => {
+        if (index >= 0) {
+            setIndex(index - 1);
+            setPlayer2(pokemonList[index])
+        }
+        else {
+            setIndex(0)
+        }
+    }
+
+
+    const generateWinner = () => {
+        let fighters = [player1, player2];
         let rand = Math.random();
         let result1;
         if (rand < 0.5) {
             result1 = 0;
         } else {
             result1 = 1;
-        };        
-        this.setState({ winner: fighters[result1], openDialog: true});
+        };
+        setWinner(fighters[result1]);
+        setOpenDialog(true);
 
-      };
-      
-    render() {
-        
-        const handleClose = () => {
-            this.setState({openDialog: false});
-          };
-    
-        return (
-            <div>
-                <h1>Pokegame!</h1>
-                <p>Choose your Pokemon!</p>                
-                
-                <div className="player-display">
-                    <div className="player1">
-                        <div className="player1-card">
-                        <Pokemon poke={this.state.player1}/>
-                        </div>
-                    
-                        <div className="player1-buttons">
-                        <button 
-                        onClick={this.generatePlayer1}
+    };
+
+
+    const handleClose = () => {
+        setOpenDialog(false);
+    };
+
+    return (
+        <div>
+            <h1>Pokegame!</h1>
+            <p>Choose your Pokemon!</p>
+
+            <div className="player-display">
+                <div className="player1">
+                    <div className="player1-card">
+                        <Pokemon poke={player1} />
+                    </div>
+
+                    <div className="player1-buttons">
+                        <button
+                            onClick={generatePlayer1}
                         >New
                         </button>
 
-                        <button 
-                        className="backButton"                        
-                        onClick={this.previousPokemonPlayer1}
+                        <button
+                            className="backButton"
+                            onClick={previousPokemonPlayer1}
                         >Back
-                        </button>   
-                        </div>
+                        </button>
                     </div>
-                    
-                    <div className="player2">
-                        <div className="player2-card"> 
-                            <Pokemon poke={this.state.player2}/>
-                        </div>
-                        
-                        <button                          
-                        onClick={this.generatePlayer2}
-                        >New
-                        </button>   
+                </div>
 
-                        <button               
-                        className="backButton"           
-                        onClick={this.previousPokemonPlayer2}
-                        >Back
-                        </button>                    
+                <div className="player2">
+                    <div className="player2-card">
+                        <Pokemon poke={player2} />
                     </div>
-                </div>
-                <div>
+
                     <button
-                    className = "winner"
-                    onClick={this.generateWinner}
-                    >Click to fight!!!</button>
+                        onClick={generatePlayer2}
+                    >New
+                        </button>
+
+                    <button
+                        className="backButton"
+                        onClick={previousPokemonPlayer2}
+                    >Back
+                        </button>
                 </div>
-                <div className="alertDialog">
-                        <Dialog 
-                        open={this.state.openDialog}
-                        onClose={handleClose}
-                        aria-labelledby="alert-dialog-title"
-                        aria-describedby="alert-dialog-description"
-                    >
-                        <DialogTitle id="alert-dialog-title">{"The Winner is..."}</DialogTitle>
-                        <DialogContent >
-                         <Pokemon poke={this.state.winner}/>
-                        </DialogContent>
-                        <DialogActions>
+            </div>
+            <div>
+                <button
+                    className="winner"
+                    onClick={generateWinner}
+                >Click to fight!!!</button>
+            </div>
+            <div className="alertDialog">
+                <Dialog
+                    open={openDialog}
+                    onClose={handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">{"The Winner is..."}</DialogTitle>
+                    <DialogContent >
+                        <Pokemon poke={winner} />
+                    </DialogContent>
+                    <DialogActions>
                         <Button onClick={handleClose} color="primary">
                             Play again!
                         </Button>
-                        </DialogActions>
-                    </Dialog>
-                    </div>
+                    </DialogActions>
+                </Dialog>
             </div>
-        );
-    }
+        </div>
+    );
 }
 
-export default Pokegame;
+

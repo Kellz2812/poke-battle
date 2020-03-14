@@ -10,7 +10,7 @@ export class Pokemon extends Component {
                 <div className="Pokecard-heading">
                     {this.props.poke.name}
                 </div>
-                <img src={this.props.poke.pokeIMG} alt="picture"></img>
+                <img src={this.props.poke.pokeIMG} alt="pokemon-pic"></img>
                 <div className="Pokecard-stats">
                     <p>Type: {this.props.poke.type}</p>
                     <p>Weakness: {this.props.poke.weakness}</p>
